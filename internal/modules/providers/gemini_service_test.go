@@ -210,6 +210,32 @@ func TestParseResponseWithoutUsageMetadataLeavesItNil(t *testing.T) {
 	}
 }
 
+// TestParseResponseSkipsShortPayloads covers frames whose payload has fewer
+// than three elements, which Gemini Web sends in some multi-turn replies. They
+// used to panic the numbered-field branch with "index out of range [2]".
+func TestParseResponseSkipsShortPayloads(t *testing.T) {
+	answer := []interface{}{
+		nil,
+		"conversation-id",
+		nil,
+		nil,
+		[]interface{}{
+			[]interface{}{"response-id", []interface{}{"Apple."}},
+		},
+	}
+	for _, short := range [][]interface{}{{nil}, {nil, []interface{}{"c_conversation", "r_response"}}} {
+		stream := buildWireLine(t, short) + "\n" + buildWireLine(t, answer)
+
+		resp, err := (&Client{log: zap.NewNop()}).parseResponse(stream)
+		if err != nil {
+			t.Fatalf("payload of length %d: parseResponse returned error: %v", len(short), err)
+		}
+		if resp.Text != "Apple." {
+			t.Fatalf("payload of length %d: text = %q, want the answer", len(short), resp.Text)
+		}
+	}
+}
+
 // TestParseResponseStripsCitationArtifacts proves the sanitize step is wired into
 // the provider's shared text path, so every endpoint served from Response.Text
 // gets clean output.

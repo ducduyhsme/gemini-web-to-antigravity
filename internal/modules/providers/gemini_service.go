@@ -1091,8 +1091,9 @@ func (c *Client) parseResponse(text string) (*Response, error) {
 				// Newer StreamGenerate replies (notably the Videos tool
 				// acknowledgement) stream a turn as numbered-field updates,
 				// e.g. [null,["c_...","r_..."],{"7":["text"],"44":true}],
-				// instead of the classic candidates array at index 4.
-				if len(payload) < 5 {
+				// instead of the classic candidates array at index 4. Shorter
+				// frames, with no field map at index 2, carry neither.
+				if len(payload) > 2 && len(payload) < 5 {
 					if fields, ok := payload[2].(map[string]interface{}); ok {
 						if parts, ok := fields["7"].([]interface{}); ok && len(parts) > 0 {
 							if reply, ok := parts[0].(string); ok && reply != "" {
