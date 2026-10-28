@@ -2,7 +2,9 @@ name: Auto Release on PR
 
 # pull_request_target (not pull_request) so the GITHUB_TOKEN can write releases
 # for merged PRs from forks too. This is safe only because the job never checks
-# out or runs PR head code: it checks out the merge commit already on main.
+# out any code: it reads the tags through the API and tags the merge commit
+# already on main. (actions/checkout also refuses fork PRs in this event, which
+# failed every release for a PR merged from a fork.)
 on:
   pull_request_target:
     types: [closed]
@@ -15,18 +17,15 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
-          fetch-depth: 0
-          persist-credentials: false
-
       - name: Get latest tag
         id: get_tag
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-          echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
+          # A failing API call stops the step (bash -e) instead of restarting at v0.0.0.
+          refs=$(gh api "repos/$GITHUB_REPOSITORY/git/matching-refs/tags/v" --paginate --jq '.[].ref')
+          latest_tag=$(printf '%s\n' "$refs" | sed 's#^refs/tags/##' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
+          echo "latest_tag=${latest_tag:-v0.0.0}" >> "$GITHUB_OUTPUT"
 
       - name: Increment version
         id: bump_version
