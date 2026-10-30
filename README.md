@@ -21,7 +21,7 @@
 </p>
 
 <p align="center">
-  <b>Maintained & Developed by <a href="https://github.com/ducduyhsme">Tạ Đức Duy (@ducduyhsme)</a></b><br/>
+  <b>Maintained & Developed by <a href="https://github.com/ducduyhsme">@ducduyhsme</a></b><br/>
   <i>Based on the original reverse-engineering foundation by <a href="https://github.com/ntthanh2603">Nguyễn Tuấn Thành (@ntthanh2603)</a>.</i>
 </p>
 
