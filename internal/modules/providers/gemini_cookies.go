@@ -299,6 +299,30 @@ func cookieHeaderHash(header string) string {
 
 // savePushedSession writes a pushed session to disk. A failure is logged, not
 // returned: the session is already live, only a restart would lose it.
+// syncCookieToEnvFile updates GEMINI_COOKIES in an existing .env file.
+func syncCookieToEnvFile(path, newCookie string) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return
+	}
+	lines := strings.Split(string(data), "\n")
+	var newLines []string
+	found := false
+	for _, line := range lines {
+		trimmed := strings.TrimRight(line, "\r")
+		if strings.HasPrefix(trimmed, "GEMINI_COOKIES=") {
+			newLines = append(newLines, "GEMINI_COOKIES="+newCookie)
+			found = true
+		} else {
+			newLines = append(newLines, line)
+		}
+	}
+	if !found {
+		newLines = append(newLines, "GEMINI_COOKIES="+newCookie)
+	}
+	_ = os.WriteFile(path, []byte(strings.Join(newLines, "\n")), 0o600)
+}
+
 func (c *Client) savePushedSession(header string, updatedAt time.Time) {
 	data, err := json.Marshal(pushedSession{CookieHeader: header, EnvHash: c.envCookieHash, UpdatedAt: updatedAt})
 	if err == nil {
@@ -309,6 +333,17 @@ func (c *Client) savePushedSession(header string, updatedAt time.Time) {
 	if err != nil {
 		c.log.Warn("Failed to save the pushed session; a restart will use GEMINI_COOKIES",
 			zap.String("source", CookieSourceAdminAPI), zap.Error(err))
+	}
+
+	// Also persist into .env in the working directory
+	syncCookieToEnvFile(".env", header)
+	// And accounts/<acc_id>.env if running under instances/<acc_id>
+	if cwd, err := os.Getwd(); err == nil {
+		accId := filepath.Base(cwd)
+		accEnv := filepath.Join("..", "..", "accounts", accId+".env")
+		if _, err := os.Stat(accEnv); err == nil {
+			syncCookieToEnvFile(accEnv, header)
+		}
 	}
 }
 

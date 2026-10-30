@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"gemini-web-to-api/internal/commons/configs"
 	"gemini-web-to-api/internal/modules"
 	"gemini-web-to-api/internal/server"
@@ -11,7 +14,7 @@ import (
 )
 
 func main() {
-	fx.New(
+	app := fx.New(
 		fx.Provide(
 			configs.New,
 			func(cfg *configs.Config) (*zap.Logger, error) {
@@ -21,5 +24,10 @@ func main() {
 		server.Module,
 		modules.Module,
 		fx.NopLogger,
-	).Run()
+	)
+	if err := app.Err(); err != nil {
+		fmt.Fprintf(os.Stderr, "\n[LOI KHOI DONG SERVER]: %v\n", err)
+		os.Exit(1)
+	}
+	app.Run()
 }

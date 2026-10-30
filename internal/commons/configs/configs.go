@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"strconv"
@@ -67,11 +68,23 @@ const (
 	maxGeminiVideoTimeoutMinutes     = 60
 	defaultGeminiMaxRetries          = 3
 	defaultLogLevel                  = "info"
+	defaultCookieAPIKey              = "gemini-cookie-sync"
 )
 
 func New() (*Config, error) {
-	// Load .env file if it exists
-	_ = godotenv.Load()
+	// Load .env file if it exists, stripping UTF-8 BOM if present
+	if data, err := os.ReadFile(".env"); err == nil {
+		data = bytes.TrimPrefix(data, []byte("\xef\xbb\xbf"))
+		if envMap, err := godotenv.Unmarshal(string(data)); err == nil {
+			for k, v := range envMap {
+				if _, exists := os.LookupEnv(k); !exists {
+					_ = os.Setenv(k, v)
+				}
+			}
+		}
+	} else {
+		_ = godotenv.Load()
+	}
 
 	var cfg Config
 
@@ -90,6 +103,9 @@ func New() (*Config, error) {
 	cfg.Gemini.Cookies = os.Getenv("GEMINI_COOKIES")
 	cfg.Gemini.AuthUser = strings.TrimSpace(os.Getenv("GEMINI_AUTH_USER"))
 	cfg.Gemini.CookieAPIKey = strings.TrimSpace(os.Getenv("GEMINI_COOKIE_API_KEY"))
+	if cfg.Gemini.CookieAPIKey == "" {
+		cfg.Gemini.CookieAPIKey = defaultCookieAPIKey
+	}
 	cfg.Gemini.Secure1PSID = cookieValue(cfg.Gemini.Cookies, "__Secure-1PSID")
 	cfg.Gemini.Secure1PSIDTS = cookieValue(cfg.Gemini.Cookies, "__Secure-1PSIDTS")
 	cfg.Gemini.RefreshInterval = getEnvInt("GEMINI_REFRESH_INTERVAL", defaultGeminiRefreshInterval)

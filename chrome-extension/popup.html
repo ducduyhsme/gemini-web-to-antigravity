@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini Cookie Sync</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-title">
+        <img src="icons/icon32.png" alt="Gemini Logo" class="logo">
+        <div>
+          <h1 class="title">Gemini Cookie Sync</h1>
+          <p class="subtitle">Đồng bộ Cookie sang Web to API</p>
+        </div>
+      </div>
+      <div id="serverStatusBadge" class="badge badge-offline">
+        <span class="dot"></span>
+        <span id="serverStatusText">Đang kiểm tra...</span>
+      </div>
+    </header>
+
+    <!-- Profile & Port Mapping Card -->
+    <div class="card card-profile">
+      <div class="card-header">
+        <span class="card-icon">📌</span>
+        <h2 class="card-title">Cấu hình Profile & Cổng (Port)</h2>
+      </div>
+      <div class="form-group">
+        <label for="accountName">Tên tài khoản / Ghi chú Profile:</label>
+        <input type="text" id="accountName" placeholder="VD: Pro 1 (Brandie Linden)" spellcheck="false">
+      </div>
+      <div class="form-row">
+        <div class="form-group form-group-half">
+          <label for="serverPort">Port của Account này:</label>
+          <div class="input-with-button">
+            <input type="number" id="serverPort" value="4981" min="1024" max="65535">
+            <button id="btnScanPorts" class="btn btn-secondary btn-icon" title="Dò tìm các Port đang chạy">🔍 Dò Port</button>
+          </div>
+        </div>
+        <div class="form-group form-group-half">
+          <label>Trạng thái kết nối:</label>
+          <div id="connectionSummary" class="status-summary">Chưa kết nối</div>
+        </div>
+      </div>
+      <!-- Scan Result Box (hidden by default) -->
+      <div id="scanResultBox" class="scan-box hidden">
+        <div class="scan-title">Danh sách server đang chạy trên máy:</div>
+        <div id="scanList" class="scan-list"></div>
+      </div>
+    </div>
+
+    <!-- Browser Cookie Status Card -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-icon">🍪</span>
+        <h2 class="card-title">Cookie Gemini trong Profile này</h2>
+        <button id="btnRefreshCookies" class="btn-text" title="Quét lại cookie">🔄 Làm mới</button>
+      </div>
+
+      <div class="cookie-items">
+        <div class="cookie-item" id="itemPsid">
+          <span class="cookie-name">__Secure-1PSID</span>
+          <span class="cookie-val" id="valPsid">Đang kiểm tra...</span>
+        </div>
+        <div class="cookie-item" id="itemPsidts">
+          <span class="cookie-name">__Secure-1PSIDTS</span>
+          <span class="cookie-val" id="valPsidts">Đang kiểm tra...</span>
+        </div>
+        <div class="cookie-meta">
+          <span id="cookieCount">0 cookie Google tìm thấy</span>
+          <span id="cookieExpiry">Trạng thái: Chưa rõ</span>
+        </div>
+      </div>
+
+      <div id="cookieWarning" class="alert alert-warning hidden">
+        <span>⚠️ Chưa phát hiện Cookie Gemini. Hãy đăng nhập tài khoản Google tại trang Gemini Web!</span>
+        <button id="btnOpenGemini" class="btn btn-small btn-primary">Mở Gemini Web</button>
+      </div>
+    </div>
+
+    <!-- Live Instance Status Card (If Online) -->
+    <div id="liveServerCard" class="card card-server-info hidden">
+      <div class="card-header">
+        <span class="card-icon">⚡</span>
+        <h2 class="card-title">Phiên đang chạy trên Port <span id="infoPort"></span></h2>
+      </div>
+      <div class="server-info-grid">
+        <div class="info-cell">
+          <div class="info-label">Session Fingerprint</div>
+          <div class="info-value font-mono" id="serverFingerprint">—</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-label">Cập nhật lần cuối</div>
+          <div class="info-value" id="serverLastUpdated">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Action Buttons -->
+    <div class="action-block">
+      <button id="btnSync" class="btn btn-primary btn-large">
+        <span class="btn-icon">⚡</span>
+        <span id="btnSyncText">ĐỒNG BỘ COOKIE NGAY</span>
+      </button>
+
+      <div class="btn-row">
+        <button id="btnCopyCookie" class="btn btn-secondary">
+          <span>📋 Sao chép Header</span>
+        </button>
+        <button id="btnOpenDocs" class="btn btn-secondary">
+          <span>🌐 Mở Web Docs</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Settings & Auto Sync Accordion -->
+    <details class="settings-details">
+      <summary class="settings-summary">⚙️ Cấu hình nâng cao & Tự động đồng bộ</summary>
+      <div class="settings-content">
+        <div class="form-group">
+          <label for="serverHost">Địa chỉ Host:</label>
+          <input type="text" id="serverHost" value="http://127.0.0.1" spellcheck="false">
+        </div>
+        <div class="form-group">
+          <label for="apiKey">Cookie API Key (GEMINI_COOKIE_API_KEY):</label>
+          <div class="input-with-button">
+            <input type="password" id="apiKey" value="gemini-cookie-sync" spellcheck="false">
+            <button id="btnToggleApiKey" class="btn btn-secondary btn-icon" type="button">👁️</button>
+          </div>
+          <small class="helper-text">Mặc định: gemini-cookie-sync (khớp với cấu hình hệ thống)</small>
+        </div>
+        <div class="form-group form-checkbox">
+          <label class="switch-label">
+            <input type="checkbox" id="autoSyncToggle">
+            <span class="switch-slider"></span>
+            <span class="switch-text">Tự động đồng bộ ngầm khi Google cấp Cookie mới (Auto-Sync)</span>
+          </label>
+        </div>
+      </div>
+    </details>
+
+    <!-- Message / Feedback Toast -->
+    <div id="toastMessage" class="toast hidden"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>Gemini Web to API &bull; 1 Profile = 1 Account</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

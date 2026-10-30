@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity & Gemini Web to API - Unified Manager</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2338bdf8'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --border-color: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Top Header */
+        header {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 16px rgba(6, 182, 212, 0.4);
+        }
+        .brand-icon svg { width: 18px; height: 18px; fill: white; }
+        .brand h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+        .brand span { font-size: 12px; color: var(--accent-cyan); font-weight: 500; }
+
+        .header-badges {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+        .badge-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+        .badge-green { color: #34d399; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.1); }
+        .badge-green .badge-dot { background: #10b981; box-shadow: 0 0 8px #10b981; }
+        .badge-gray { color: var(--text-secondary); }
+        .badge-gray .badge-dot { background: var(--text-muted); }
+        .badge-yellow { color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.1); }
+        .badge-yellow .badge-dot { background: #f59e0b; }
+
+        /* Navigation Bar */
+        nav {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            padding: 0 24px;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            transition: all 0.15s ease;
+        }
+        .tab-btn:hover { color: var(--text-primary); }
+        .tab-btn.active {
+            color: var(--accent-cyan);
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+        .tab-btn svg { width: 16px; height: 16px; }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            padding: 24px;
+        }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+
+        /* Cards & Grids */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .card:hover {
+            border-color: rgba(6, 182, 212, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            box-shadow: 0 2px 10px rgba(6, 182, 212, 0.3);
+        }
+        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+        .btn-secondary:hover { background: #475569; }
+        .btn-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .btn-success:hover { background: rgba(16, 185, 129, 0.25); }
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.25); }
+        .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+        /* Tables & Lists */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .data-table th {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 12px 16px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .data-table td {
+            padding: 14px 16px;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+            vertical-align: middle;
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: rgba(51, 65, 85, 0.2); }
+
+        /* Log Terminal */
+        .terminal-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 160px);
+            background: #090d16;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        .terminal-header {
+            background: #131b2e;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .terminal-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .terminal-body {
+            flex: 1;
+            padding: 14px;
+            overflow-y: auto;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            white-space: pre-wrap;
+            word-break: break-all;
+            user-select: text;
+        }
+        .log-line {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 3px;
+        }
+        .log-time { color: var(--text-muted); flex-shrink: 0; }
+        .log-src {
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            flex-shrink: 0;
+            background: var(--bg-tertiary);
+            color: #cbd5e1;
+        }
+        .log-src.Bridge { background: #3b82f6; color: white; }
+        .log-src.Pro { background: #8b5cf6; color: white; }
+        .log-src.System { background: #06b6d4; color: black; }
+        .log-text { flex: 1; }
+        .log-text.info { color: #cbd5e1; }
+        .log-text.warn { color: #fbbf24; }
+        .log-text.error { color: #f87171; }
+        .log-text.success { color: #34d399; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 520px;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .modal-title { font-size: 16px; font-weight: 700; }
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .modal-close:hover { color: var(--text-primary); }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .form-control {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .form-control:focus { border-color: var(--accent-cyan); }
+        .form-help {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            font-size: 13px;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 200;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <div>
+                <h1>Antigravity & Gemini API</h1>
+                <span>Unified Dashboard (Headless & No CLI)</span>
+            </div>
+        </div>
+
+        <div class="header-badges">
+            <div id="badge-bridge" class="badge badge-gray">
+                <div class="badge-dot"></div>
+                <span id="badge-bridge-text">Bridge: Checking...</span>
+            </div>
+            <div id="badge-ide" class="badge badge-gray">
+                <div class="badge-dot"></div>
+                <span id="badge-ide-text">IDE: Checking...</span>
+            </div>
+            <div id="badge-accounts" class="badge badge-gray">
+                <div class="badge-dot"></div>
+                <span id="badge-accounts-text">Accounts: 0 Active</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <button class="tab-btn active" onclick="switchTab('dashboard')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+            Dashboard
+        </button>
+        <button class="tab-btn" onclick="switchTab('accounts')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Google Accounts
+        </button>
+        <button class="tab-btn" onclick="switchTab('models')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            Antigravity Provider & Models
+        </button>
+        <button class="tab-btn" onclick="switchTab('logs')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            Unified Real-time Logs
+        </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main>
+
+        <!-- TAB 1: DASHBOARD -->
+        <div id="tab-dashboard" class="tab-pane active">
+            <div class="grid-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Bridge Server</span>
+                        <span id="dash-bridge-badge" class="badge badge-gray">Offline</span>
+                    </div>
+                    <div id="dash-bridge-port" class="card-value">Port 50998</div>
+                    <div style="margin-top: 14px;">
+                        <button id="btn-toggle-bridge" class="btn btn-primary btn-sm" onclick="toggleBridge()">Start Bridge</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Antigravity IDE</span>
+                        <span id="dash-ide-badge" class="badge badge-gray">Default</span>
+                    </div>
+                    <div id="dash-ide-status" class="card-value">Official API</div>
+                    <div style="margin-top: 14px;">
+                        <button id="btn-toggle-ide" class="btn btn-secondary btn-sm" onclick="toggleIde()">Activate for IDE</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Active Accounts</span>
+                        <span class="badge badge-green" id="dash-active-accounts">0 Active</span>
+                    </div>
+                    <div id="dash-total-accounts" class="card-value">0 Configured</div>
+                    <div style="margin-top: 14px; display: flex; gap: 8px;">
+                        <button class="btn btn-success btn-sm" onclick="startAllAccounts()">Start All</button>
+                        <button class="btn btn-danger btn-sm" onclick="stopAllAccounts()">Stop All</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Custom AI Models</span>
+                        <span class="badge badge-green">Ready</span>
+                    </div>
+                    <div id="dash-models-count" class="card-value">0 Models</div>
+                    <div style="margin-top: 14px;">
+                        <button class="btn btn-secondary btn-sm" onclick="switchTab('models')">Manage Models &rarr;</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Integration Guide -->
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-title" style="margin-bottom: 12px; color: var(--accent-cyan);">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    How to use External AI Providers in Antigravity Chat
+                </div>
+                <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+                    <strong>1.</strong> Ensure Bridge Proxy is <strong>[Running]</strong> and Antigravity IDE is <strong>[Active]</strong>.<br>
+                    <strong>2.</strong> Go to the <strong>Antigravity Provider & Models</strong> tab and configure your external model (e.g. <code>gemini-4-argon</code> from local port 4982, OpenAI <code>gpt-4o</code>, or Claude <code>claude-3-7-sonnet</code>).<br>
+                    <strong>3.</strong> In Antigravity IDE, press <code>Ctrl+Shift+P</code> &rarr; <code>Developer: Reload Window</code>.<br>
+                    <strong>4.</strong> In the Chat model picker, select your custom model marked with the <strong>[Custom]</strong> badge and start chatting!
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: GOOGLE ACCOUNTS -->
+        <div id="tab-accounts" class="tab-pane">
+            <div class="section-header">
+                <div class="section-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Saved Google Accounts
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="openModal('modal-add-account')">+ Add Google Account</button>
+                    <button class="btn btn-secondary" onclick="startAllAccounts()">Start All</button>
+                    <button class="btn btn-danger" onclick="stopAllAccounts()">Stop All</button>
+                </div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Account Name</th>
+                        <th>Port</th>
+                        <th>Auth Slot</th>
+                        <th>Status</th>
+                        <th>Endpoints</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="accounts-table-body">
+                    <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Loading accounts...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TAB 3: ANTIGRAVITY PROVIDER & MODELS -->
+        <div id="tab-models" class="tab-pane">
+            <div class="section-header">
+                <div class="section-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Configured Custom AI Models
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="openModal('modal-add-model')">+ Add Custom Model</button>
+                    <button id="btn-ide-toggle-2" class="btn btn-secondary" onclick="toggleIde()">Activate Antigravity IDE</button>
+                </div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Display Name</th>
+                        <th>Provider</th>
+                        <th>Model ID</th>
+                        <th>Target API URL</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="models-table-body">
+                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading models...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TAB 4: UNIFIED REAL-TIME LOGS -->
+        <div id="tab-logs" class="tab-pane">
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-weight: 700; font-size: 13px;">Unified Process Logs</span>
+                        <span id="log-count" style="font-size: 11px; color: var(--text-muted);">0 lines</span>
+                    </div>
+
+                    <div class="terminal-controls">
+                        <select id="log-filter-source" class="form-control" style="padding: 4px 10px; font-size: 11px; width: auto;" onchange="applyLogFilter()">
+                            <option value="">All Sources</option>
+                            <option value="Bridge">Bridge Proxy</option>
+                            <option value="Pro">Account Instances</option>
+                            <option value="System">System & IDE</option>
+                        </select>
+
+                        <input type="text" id="log-search" placeholder="Search logs..." class="form-control" style="padding: 4px 10px; font-size: 11px; width: 140px;" oninput="applyLogFilter()">
+
+                        <button class="btn btn-secondary btn-sm" onclick="toggleAutoScroll()" id="btn-autoscroll">Auto-scroll: ON</button>
+                        <button class="btn btn-secondary btn-sm" onclick="copyLogs()">Copy</button>
+                        <button class="btn btn-secondary btn-sm" onclick="clearLogs()">Clear</button>
+                    </div>
+                </div>
+
+                <div class="terminal-body" id="terminal-body">
+                    <!-- Logs stream into here -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal: Add Google Account -->
+    <div id="modal-add-account" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Add New Google Account</div>
+                <button class="modal-close" onclick="closeModal('modal-add-account')">&times;</button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Friendly Account Name</label>
+                <input type="text" id="add-acc-name" class="form-control" placeholder="e.g. Google Pro 3, Personal Account">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Cookie Header (from gemini.google.com)</label>
+                <textarea id="add-acc-cookie" class="form-control" rows="3" placeholder="Paste Cookie header containing __Secure-1PSID and __Secure-1PSIDTS..."></textarea>
+                <div class="form-help">Open gemini.google.com &rarr; Press F12 &rarr; Network tab &rarr; Copy 'Cookie:' from request headers.</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Port Number (optional)</label>
+                <input type="number" id="add-acc-port" class="form-control" placeholder="e.g. 4983 (auto-suggested if blank)">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Auth User Slot (optional)</label>
+                <input type="text" id="add-acc-authuser" class="form-control" placeholder="Leave blank, or enter 1 for /u/1/, 2 for /u/2/">
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="closeModal('modal-add-account')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitAddAccount()">Save Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Update Cookie -->
+    <div id="modal-update-cookie" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="cookie-modal-title">Update Account Cookie</div>
+                <button class="modal-close" onclick="closeModal('modal-update-cookie')">&times;</button>
+            </div>
+
+            <input type="hidden" id="update-cookie-acc-id">
+
+            <div class="form-group">
+                <label class="form-label">New Cookie Header</label>
+                <textarea id="update-acc-cookie-val" class="form-control" rows="4" placeholder="Paste new cookie header..."></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="closeModal('modal-update-cookie')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitUpdateCookie()">Update Cookie</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Add Custom Model -->
+    <div id="modal-add-model" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Add Custom AI Provider & Model</div>
+                <button class="modal-close" onclick="closeModal('modal-add-model')">&times;</button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Provider Protocol</label>
+                <select id="model-provider" class="form-control" onchange="onProviderChange()">
+                    <option value="custom">OpenAI-Compatible (gemini-web-to-api, OpenAI, DeepSeek, Groq, Ollama)</option>
+                    <option value="anthropic">Claude (Anthropic API - messages endpoint)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Base URL / Endpoint</label>
+                <input type="text" id="model-url" class="form-control" placeholder="http://127.0.0.1:4982 or https://api.openai.com/v1">
+                <div class="form-help">For local Gemini Web API, just enter <code>http://127.0.0.1:4982</code> and endpoints are auto-normalized!</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">API Key</label>
+                <input type="password" id="model-key" class="form-control" placeholder="e.g. 1 (for local) or sk-...">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Model ID</label>
+                <div style="display: flex; gap: 8px;">
+                    <select id="model-saved-select" class="form-control" style="flex: 1;" onchange="onSavedModelSelect()">
+                        <option value="">-- Choose from saved Model IDs --</option>
+                    </select>
+                    <input type="text" id="model-id-input" class="form-control" style="flex: 1;" placeholder="Or type new Model ID">
+                </div>
+                <div class="form-help">Newly entered Model IDs are auto-saved to history for instant 1-click selection in the future!</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Display Name in Antigravity Chat</label>
+                <input type="text" id="model-display-name" class="form-control" placeholder="e.g. Gemini 4 Argon or Claude 3.7 Sonnet">
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="testCurrentModelInputs()">Test Connection</button>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-secondary" onclick="closeModal('modal-add-model')">Cancel</button>
+                    <button class="btn btn-primary" onclick="submitAddModel()">Save Model</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast">
+        <span id="toast-text">Message</span>
+    </div>
+
+    <script>
+        let currentTab = 'dashboard';
+        let autoScroll = true;
+        let logsBacklog = [];
+        let savedModelsData = { openai: [], claude: [] };
+
+        function showToast(msg, isError = false) {
+            const t = document.getElementById('toast');
+            const txt = document.getElementById('toast-text');
+            txt.textContent = msg;
+            t.style.borderColor = isError ? 'var(--accent-red)' : 'var(--accent-cyan)';
+            t.style.display = 'flex';
+            setTimeout(() => { t.style.display = 'none'; }, 3000);
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+            const btn = document.querySelector(`button[onclick="switchTab('${tabId}')"]`);
+            if (btn) btn.classList.add('active');
+
+            const pane = document.getElementById(`tab-${tabId}`);
+            if (pane) pane.classList.add('active');
+
+            if (tabId === 'logs' && autoScroll) {
+                const body = document.getElementById('terminal-body');
+                body.scrollTop = body.scrollHeight;
+            }
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // --- Fetch & Update Status ---
+        async function refreshStatus() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+
+                // Bridge Status
+                const bBridge = document.getElementById('badge-bridge');
+                const tBridge = document.getElementById('badge-bridge-text');
+                const dBridgeBadge = document.getElementById('dash-bridge-badge');
+                const btnToggleBridge = document.getElementById('btn-toggle-bridge');
+
+                if (data.bridge.running) {
+                    bBridge.className = 'badge badge-green';
+                    tBridge.textContent = `Bridge: Active (:50998)`;
+                    dBridgeBadge.className = 'badge badge-green';
+                    dBridgeBadge.textContent = 'Running';
+                    btnToggleBridge.textContent = 'Stop Bridge';
+                    btnToggleBridge.className = 'btn btn-danger btn-sm';
+                } else {
+                    bBridge.className = 'badge badge-gray';
+                    tBridge.textContent = 'Bridge: Stopped';
+                    dBridgeBadge.className = 'badge badge-gray';
+                    dBridgeBadge.textContent = 'Offline';
+                    btnToggleBridge.textContent = 'Start Bridge';
+                    btnToggleBridge.className = 'btn btn-primary btn-sm';
+                }
+
+                // IDE Status
+                const bIde = document.getElementById('badge-ide');
+                const tIde = document.getElementById('badge-ide-text');
+                const dIdeBadge = document.getElementById('dash-ide-badge');
+                const dIdeStatus = document.getElementById('dash-ide-status');
+                const btnToggleIde = document.getElementById('btn-toggle-ide');
+                const btnIdeToggle2 = document.getElementById('btn-ide-toggle-2');
+
+                if (data.ide.active) {
+                    bIde.className = 'badge badge-green';
+                    tIde.textContent = 'IDE: Connected';
+                    dIdeBadge.className = 'badge badge-green';
+                    dIdeBadge.textContent = 'Connected';
+                    dIdeStatus.textContent = 'Bridge Routed';
+                    btnToggleIde.textContent = 'Revert to Official API';
+                    btnToggleIde.className = 'btn btn-danger btn-sm';
+                    if (btnIdeToggle2) btnIdeToggle2.textContent = 'Revert to Default Gemini';
+                } else {
+                    bIde.className = 'badge badge-yellow';
+                    tIde.textContent = 'IDE: Default (Google)';
+                    dIdeBadge.className = 'badge badge-yellow';
+                    dIdeBadge.textContent = 'Default';
+                    dIdeStatus.textContent = 'Google Backend';
+                    btnToggleIde.textContent = 'Activate for IDE';
+                    btnToggleIde.className = 'btn btn-secondary btn-sm';
+                    if (btnIdeToggle2) btnIdeToggle2.textContent = 'Activate Antigravity IDE';
+                }
+
+                // Accounts Counts
+                const activeCount = data.accounts.filter(a => a.running).length;
+                const totalCount = data.accounts.length;
+                document.getElementById('badge-accounts').className = activeCount > 0 ? 'badge badge-green' : 'badge badge-gray';
+                document.getElementById('badge-accounts-text').textContent = `Accounts: ${activeCount}/${totalCount} Active`;
+                document.getElementById('dash-active-accounts').textContent = `${activeCount} Active`;
+                document.getElementById('dash-total-accounts').textContent = `${totalCount} Account(s)`;
+                document.getElementById('dash-models-count').textContent = `${data.modelsCount} Model(s)`;
+
+                renderAccountsTable(data.accounts);
+            } catch (e) {
+                console.error('refreshStatus failed:', e);
+            }
+        }
+
+        // --- Render Accounts ---
+        function renderAccountsTable(accounts) {
+            const tbody = document.getElementById('accounts-table-body');
+            if (accounts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">No Google accounts saved yet. Click "+ Add Google Account" to get started.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = accounts.map(a => `
+                <tr>
+                    <td>
+                        <div style="font-weight: 600; color: #fff;">${a.name}</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">${a.id}</div>
+                    </td>
+                    <td><span style="font-family: monospace; font-weight: 700; color: var(--accent-cyan);">:${a.port}</span></td>
+                    <td><span style="font-size: 11px; color: var(--text-secondary);">${a.authUser ? '/u/' + a.authUser + '/' : 'Default (Primary)'}</span></td>
+                    <td>
+                        ${a.running 
+                            ? `<span class="badge badge-green"><div class="badge-dot"></div>Running</span>` 
+                            : `<span class="badge badge-gray"><div class="badge-dot"></div>Stopped</span>`}
+                    </td>
+                    <td>
+                        <div style="font-size: 11px; color: var(--text-muted);">
+                            <a href="http://localhost:${a.port}/openai/v1/models" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">/openai/v1</a> &bull; 
+                            <a href="http://localhost:${a.port}/docs" target="_blank" style="color: var(--text-secondary); text-decoration: none;">docs</a>
+                        </div>
+                    </td>
+                    <td style="text-align: right;">
+                        <div style="display: inline-flex; gap: 6px;">
+                            ${a.running 
+                                ? `<button class="btn btn-danger btn-sm" onclick="stopAccount('${a.id}')">Stop</button>` 
+                                : `<button class="btn btn-success btn-sm" onclick="startAccount('${a.id}')">Start</button>`}
+                            <button class="btn btn-secondary btn-sm" onclick="openUpdateCookieModal('${a.id}', '${a.name}')">Cookie</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteAccount('${a.id}', '${a.name}')">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // --- Render Models ---
+        async function refreshModels() {
+            try {
+                const res = await fetch('/api/models');
+                const data = await res.json();
+                savedModelsData = data.saved || { openai: [], claude: [] };
+
+                const tbody = document.getElementById('models-table-body');
+                if (data.models.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">No custom models added yet. Click "+ Add Custom Model" to configure one.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = data.models.map(m => {
+                    const provLabel = m.provider === 'anthropic' ? 'Claude' : 'OpenAI-Compatible';
+                    return `
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600; color: #fff;">${m.displayName || m.name}</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">${m.name}</div>
+                            </td>
+                            <td><span class="badge badge-green">${provLabel}</span></td>
+                            <td><span style="font-family: monospace; font-weight: 700; color: var(--accent-cyan);">${m.externalModelName}</span></td>
+                            <td><span style="font-size: 11px; color: var(--text-secondary); font-family: monospace;">${m.apiUrl}</span></td>
+                            <td style="text-align: right;">
+                                <div style="display: inline-flex; gap: 6px;">
+                                    <button class="btn btn-secondary btn-sm" onclick="testExistingModel('${m.provider}', '${m.apiUrl}', '${m.apiKey}', '${m.externalModelName}')">Test Ping</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteModel('${m.name}')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (e) {
+                console.error('refreshModels failed:', e);
+            }
+        }
+
+        // --- Model Modal Helpers ---
+        function onProviderChange() {
+            const p = document.getElementById('model-provider').value;
+            const select = document.getElementById('model-saved-select');
+            const urlInput = document.getElementById('model-url');
+
+            const list = p === 'anthropic' ? savedModelsData.claude : savedModelsData.openai;
+            select.innerHTML = `<option value="">-- Choose from saved Model IDs --</option>` + 
+                list.map(m => `<option value="${m}">${m}</option>`).join('');
+
+            if (p === 'anthropic') {
+                urlInput.placeholder = 'https://api.anthropic.com/v1 or http://127.0.0.1:4982';
+            } else {
+                urlInput.placeholder = 'http://127.0.0.1:4982 or https://api.openai.com/v1';
+            }
+        }
+
+        function onSavedModelSelect() {
+            const val = document.getElementById('model-saved-select').value;
+            if (val) {
+                document.getElementById('model-id-input').value = val;
+                if (!document.getElementById('model-display-name').value) {
+                    document.getElementById('model-display-name').value = val;
+                }
+            }
+        }
+
+        async function testCurrentModelInputs() {
+            const provider = document.getElementById('model-provider').value;
+            const apiUrl = document.getElementById('model-url').value;
+            const apiKey = document.getElementById('model-key').value;
+            const modelId = document.getElementById('model-id-input').value;
+
+            if (!apiUrl || !modelId) {
+                showToast('Please fill in Base URL and Model ID first.', true);
+                return;
+            }
+
+            showToast('Testing connection...');
+            try {
+                const res = await fetch('/api/models/test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ provider, apiUrl, apiKey, modelId })
+                });
+                const data = await res.json();
+                showToast(data.message, !data.success);
+            } catch (e) {
+                showToast(`Test failed: ${e.message}`, true);
+            }
+        }
+
+        async function testExistingModel(provider, apiUrl, apiKey, modelId) {
+            showToast('Testing model connection...');
+            try {
+                const res = await fetch('/api/models/test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ provider, apiUrl, apiKey, modelId })
+                });
+                const data = await res.json();
+                showToast(data.message, !data.success);
+            } catch (e) {
+                showToast(`Test failed: ${e.message}`, true);
+            }
+        }
+
+        async function submitAddModel() {
+            const provider = document.getElementById('model-provider').value;
+            const apiUrl = document.getElementById('model-url').value;
+            const apiKey = document.getElementById('model-key').value;
+            const externalModelName = document.getElementById('model-id-input').value;
+            const displayName = document.getElementById('model-display-name').value || externalModelName;
+
+            if (!apiUrl || !externalModelName) {
+                showToast('API URL and Model ID are required.', true);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/models/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ provider, apiUrl, apiKey, externalModelName, displayName })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Custom model '${displayName}' added!`);
+                    closeModal('modal-add-model');
+                    refreshModels();
+                    refreshStatus();
+                } else {
+                    showToast(data.error || 'Failed to add model.', true);
+                }
+            } catch (e) {
+                showToast(e.message, true);
+            }
+        }
+
+        async function deleteModel(name) {
+            if (!confirm(`Are you sure you want to delete model '${name}'?`)) return;
+            try {
+                const res = await fetch('/api/models/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Model deleted.');
+                    refreshModels();
+                    refreshStatus();
+                }
+            } catch (e) {
+                showToast(e.message, true);
+            }
+        }
+
+        // --- Account Actions ---
+        async function startAccount(id) {
+            showToast('Starting instance...');
+            await fetch('/api/accounts/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            setTimeout(refreshStatus, 800);
+        }
+
+        async function stopAccount(id) {
+            showToast('Stopping instance...');
+            await fetch('/api/accounts/stop', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            setTimeout(refreshStatus, 600);
+        }
+
+        async function startAllAccounts() {
+            showToast('Starting all accounts...');
+            await fetch('/api/accounts/start-all', { method: 'POST' });
+            setTimeout(refreshStatus, 1000);
+        }
+
+        async function stopAllAccounts() {
+            showToast('Stopping all accounts...');
+            await fetch('/api/accounts/stop-all', { method: 'POST' });
+            setTimeout(refreshStatus, 800);
+        }
+
+        async function submitAddAccount() {
+            const name = document.getElementById('add-acc-name').value;
+            const cookie = document.getElementById('add-acc-cookie').value;
+            const port = document.getElementById('add-acc-port').value;
+            const authUser = document.getElementById('add-acc-authuser').value;
+
+            if (!name || !cookie) {
+                showToast('Name and Cookie are required.', true);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/accounts/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, cookie, port, authUser })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Account '${name}' added successfully!`);
+                    closeModal('modal-add-account');
+                    document.getElementById('add-acc-name').value = '';
+                    document.getElementById('add-acc-cookie').value = '';
+                    refreshStatus();
+                } else {
+                    showToast(data.error || 'Failed to add account.', true);
+                }
+            } catch (e) {
+                showToast(e.message, true);
+            }
+        }
+
+        function openUpdateCookieModal(id, name) {
+            document.getElementById('update-cookie-acc-id').value = id;
+            document.getElementById('cookie-modal-title').textContent = `Update Cookie: ${name}`;
+            document.getElementById('update-acc-cookie-val').value = '';
+            openModal('modal-update-cookie');
+        }
+
+        async function submitUpdateCookie() {
+            const id = document.getElementById('update-cookie-acc-id').value;
+            const cookie = document.getElementById('update-acc-cookie-val').value;
+
+            if (!cookie) {
+                showToast('Please paste a cookie header.', true);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/accounts/update-cookie', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, cookie })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Cookie updated successfully!');
+                    closeModal('modal-update-cookie');
+                } else {
+                    showToast(data.error || 'Failed to update cookie.', true);
+                }
+            } catch (e) {
+                showToast(e.message, true);
+            }
+        }
+
+        async function deleteAccount(id, name) {
+            if (!confirm(`Are you sure you want to delete account '${name}'?`)) return;
+            try {
+                await fetch('/api/accounts/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+                showToast(`Account '${name}' deleted.`);
+                refreshStatus();
+            } catch (e) {
+                showToast(e.message, true);
+            }
+        }
+
+        // --- Bridge & IDE Toggle ---
+        async function toggleBridge() {
+            const t = document.getElementById('btn-toggle-bridge').textContent;
+            const endpoint = t.includes('Start') ? '/api/bridge/start' : '/api/bridge/stop';
+            showToast(t.includes('Start') ? 'Starting Bridge...' : 'Stopping Bridge...');
+            await fetch(endpoint, { method: 'POST' });
+            setTimeout(refreshStatus, 800);
+        }
+
+        async function toggleIde() {
+            const b = document.getElementById('badge-ide-text').textContent;
+            const enable = !b.includes('Connected');
+            showToast(enable ? 'Activating for Antigravity IDE...' : 'Reverting IDE settings...');
+            await fetch('/api/ide/toggle', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ enable })
+            });
+            setTimeout(refreshStatus, 600);
+        }
+
+        // --- Live Logs SSE ---
+        function setupLogStream() {
+            const es = new EventSource('/api/logs/stream');
+            const terminal = document.getElementById('terminal-body');
+
+            es.onmessage = (event) => {
+                try {
+                    const item = JSON.parse(event.data);
+                    logsBacklog.push(item);
+                    if (logsBacklog.length > 2000) logsBacklog.shift();
+
+                    document.getElementById('log-count').textContent = `${logsBacklog.length} lines`;
+
+                    if (shouldShowLog(item)) {
+                        appendLogElement(item);
+                    }
+                } catch (e) {
+                    console.error('Log parse error:', e);
+                }
+            };
+
+            es.onerror = () => {
+                setTimeout(setupLogStream, 3000);
+            };
+        }
+
+        function shouldShowLog(item) {
+            const filter = document.getElementById('log-filter-source').value;
+            const search = document.getElementById('log-search').value.toLowerCase();
+
+            if (filter && !item.source.toLowerCase().includes(filter.toLowerCase())) return false;
+            if (search && !item.text.toLowerCase().includes(search) && !item.source.toLowerCase().includes(search)) return false;
+            return true;
+        }
+
+        function appendLogElement(item) {
+            const terminal = document.getElementById('terminal-body');
+            const line = document.createElement('div');
+            line.className = 'log-line';
+
+            let srcClass = 'Pro';
+            if (item.source.includes('Bridge')) srcClass = 'Bridge';
+            if (item.source.includes('System') || item.source.includes('IDE')) srcClass = 'System';
+
+            line.innerHTML = `
+                <span class="log-time">[${item.time}]</span>
+                <span class="log-src ${srcClass}">${item.source}</span>
+                <span class="log-text ${item.level}">${escapeHtml(item.text)}</span>
+            `;
+            terminal.appendChild(line);
+
+            if (autoScroll) {
+                terminal.scrollTop = terminal.scrollHeight;
+            }
+        }
+
+        function applyLogFilter() {
+            const terminal = document.getElementById('terminal-body');
+            terminal.innerHTML = '';
+            for (const item of logsBacklog) {
+                if (shouldShowLog(item)) {
+                    appendLogElement(item);
+                }
+            }
+        }
+
+        function toggleAutoScroll() {
+            autoScroll = !autoScroll;
+            const b = document.getElementById('btn-autoscroll');
+            b.textContent = autoScroll ? 'Auto-scroll: ON' : 'Auto-scroll: OFF';
+            b.style.color = autoScroll ? 'var(--accent-cyan)' : 'var(--text-muted)';
+        }
+
+        function clearLogs() {
+            fetch('/api/logs/clear', { method: 'POST' });
+            document.getElementById('terminal-body').innerHTML = '';
+            logsBacklog = [];
+            document.getElementById('log-count').textContent = '0 lines';
+        }
+
+        function copyLogs() {
+            const text = logsBacklog.map(l => `[${l.time}] [${l.source}] ${l.text}`).join('\n');
+            navigator.clipboard.writeText(text).then(() => showToast('Logs copied to clipboard!'));
+        }
+
+        function escapeHtml(str) {
+            return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            refreshStatus();
+            refreshModels();
+            setupLogStream();
+            onProviderChange();
+            setInterval(refreshStatus, 4000);
+        });
+    </script>
+</body>
+</html>

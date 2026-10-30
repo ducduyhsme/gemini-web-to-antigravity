@@ -3,392 +3,179 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ntthanh2603/gemini-web-to-api/releases"><img src="https://img.shields.io/github/v/release/ntthanh2603/gemini-web-to-api?style=flat-square&logo=github&color=3670ad" alt="Release"></a>
+  <a href="https://github.com/ducduyhsme/gemini-web-to-api/stargazers"><img src="https://img.shields.io/github/stars/ducduyhsme/gemini-web-to-api?style=flat-square&color=gold&label=stars" alt="Stars"></a>
   <a href="https://golang.org/"><img src="https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat-square&logo=go" alt="Go Version"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js" alt="Node Version"></a>
   <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker" alt="Docker"></a>
-  <a href="https://github.com/ntthanh2603/gemini-web-to-api/pkgs/container/gemini-web-to-api"><img src="https://img.shields.io/badge/GHCR-Ready-2496ED?style=flat-square&logo=github" alt="GHCR"></a>
-  <a href="https://github.com/ntthanh2603/gemini-web-to-api/blob/main/LICENSE"><img src="https://img.shields.io/github/license/ntthanh2603/gemini-web-to-api?style=flat-square&color=orange" alt="License"></a>
-  <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=flat-square" alt="Maintained">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-orange?style=flat-square" alt="License"></a>
+  <img src="https://img.shields.io/badge/GUI-Desktop%20App-blueviolet?style=flat-square" alt="Desktop GUI">
+  <img src="https://img.shields.io/badge/Antigravity-Custom%20Provider-success?style=flat-square" alt="Antigravity Custom Provider">
+</p>
+
+<h1 align="center">Gemini Web To API & Antigravity Suite 🚀</h1>
+
+<p align="center">
+  <b>Universal AI Gateway & Desktop Control Center</b><br/>
+  An enhanced, full-featured suite transforming Google Gemini web interface into standardized REST APIs (OpenAI, Claude, Gemini) with zero required API keys.<br/>
+  Featuring a <b>Zero-CLI Desktop GUI Dashboard</b>, <b>Antigravity Custom Provider Bridge</b>, <b>Multi-Account Isolation</b>, and a <b>1-Click Chrome Cookie Sync Extension</b>.
 </p>
 
 <p align="center">
-  <a href="https://github.com/ntthanh2603/gemini-web-to-api/stargazers"><img src="https://img.shields.io/github/stars/ntthanh2603/gemini-web-to-api?style=flat-square&color=gold&label=stars" alt="Stars"></a>
-  <a href="https://github.com/ntthanh2603/gemini-web-to-api/issues"><img src="https://img.shields.io/github/issues/ntthanh2603/gemini-web-to-api?style=flat-square&color=red&label=issues" alt="Issues"></a>
-  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome">
-</p>
-
-<h1 align="center">Gemini Web To API 🚀</h1>
-
-<p align="center">
-  Transforms Google Gemini web interface into a standardized REST API.<br/>
-  Access Gemini's power without API keys — just use your cookies!
-</p>
-
-<p align="center">
-  <b>Created with ❤️ by <a href="https://github.com/ntthanh2603">@ntthanh2603</a></b>
+  <b>Maintained & Developed by <a href="https://github.com/ducduyhsme">Tạ Đức Duy (@ducduyhsme)</a></b><br/>
+  <i>Based on the original reverse-engineering foundation by <a href="https://github.com/ntthanh2603">Nguyễn Tuấn Thành (@ntthanh2603)</a>.</i>
 </p>
 
 > [!NOTE]
-> This project is intended for **research and educational purposes only**. Please use responsibly and refrain from any commercial use.
-
-> [!WARNING]
-> This project is not affiliated with Google. It uses reverse-engineered web cookies and may not comply with [Google's Terms of Service](https://policies.google.com/terms). Use at your own risk — the author assumes no responsibility for any account actions or data loss.
+> This project is intended for **research, educational, and developer workflow enhancement purposes only**. Please use responsibly.
+> This software is not affiliated with Google. It uses web session cookies and is distributed under the [MIT License](LICENSE).
 
 ---
 
-## 🎯 Why Gemini Web To API?
+## 🌟 What Makes This Suite Special?
 
-**Problem**: You want to use Google Gemini's latest models, but you don't have an API key or prefer not to use one.
+While the core reverse-engineering engine converts Gemini web sessions into REST APIs, this **Suite Edition** introduces major architectural enhancements to provide a production-grade, seamless developer experience:
 
-**Solution**: Creates a local API server that:
+- 🖥️ **Zero-CLI Desktop GUI Dashboard**: Eliminates multiple command prompt / black terminal windows. Everything is controlled from a single modern desktop app (Windows Native App Mode) with **zero CLI popups**.
+- 🪐 **Antigravity Custom Provider Bridge**: Google Antigravity (Antigravity IDE & CLI `agy`) officially only supports stock Gemini. This bridge enables you to **use any external AI provider** (OpenAI, Claude, DeepSeek, OpenRouter, Groq, Ollama) directly inside Antigravity! Custom models are dynamically injected into the IDE's model picker with full 2-way protocol and tool-call translation.
+- 👥 **Multi-Account Concurrent Isolation**: Run multiple Google accounts simultaneously on dedicated ports (e.g., `4981`, `4982`, `4983`...) with isolated cookie jars (`instances/acc_xxx/`) and zero account crossover.
+- 🧩 **Chrome Extension (1-Click Sync)**: Included in [`chrome-extension/`](chrome-extension/). Extract and push fresh Google cookies directly into any running instance without restarting the server.
+- 📜 **Unified Real-Time Log Hub**: All daemon stdout and stderr logs stream live into a single console via Server-Sent Events (SSE) with source filtering, search, and auto-scroll.
+- 🌉 **Universal AI Bridge**: One engine exposes native **OpenAI** (`/openai/v1`), **Claude** (`/claude/v1`), and **Gemini** (`/gemini/v1beta`) endpoints.
+- 🎨 **Multimodal & Advanced Features**: Text-to-image with `b64_json`, reference image inputs, text-to-video (`.mp4`), Canvas documents, music generation, and reasoning/thinking level control.
 
-- ✅ Connects to Gemini's web interface using your browser cookies
-- ✅ Exposes OpenAI / Claude / Gemini-compatible API endpoints
-- ✅ No API keys needed — just cookies from your browser
-- ✅ Handles authentication and session management automatically
+---
 
-**Use Cases**:
+## 🏛️ Architecture & Flow
 
-- Use Gemini without API keys
-- Test Gemini integration locally
-- Build applications leveraging Gemini's latest models
-- Develop with cookie-based authentication
+```text
+┌────────────────────────────────────────────────────────┐
+│                   Antigravity IDE                      │
+│        (Model Selection: Stock & Custom Models)        │
+└───────────────────────────┬────────────────────────────┘
+                            │ jetski.cloudCodeUrl: http://127.0.0.1:50998
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│         Antigravity Custom Provider Bridge             │
+│            (Port 50998 - Bidirectional Proxy)          │
+└───────┬───────────────────────────────┬────────────────┘
+        │ OpenAI-Compatible             │ Anthropic Claude
+        ▼                               ▼
+┌───────────────┐ ┌───────────────┐ ┌────────────────────┐
+│ DeepSeek /    │ │ Gemini Web-   │ │ Anthropic Claude   │
+│ OpenRouter /  │ │ to-API Local  │ │ Claude 3.7 /       │
+│ Groq / Ollama │ │ (Port 4981+)  │ │ Claude 3.5 Sonnet  │
+└───────────────┘ └───────┬───────┘ └────────────────────┘
+                          │
+                          ▼
+            ┌───────────────────────────┐
+            │    Google Gemini Web      │
+            │  (Cookie Authentication)  │
+            └───────────────────────────┘
+```
 
 ---
 
 ## ⚡ Quick Start
 
-### 🐳 Option A — Docker Run (no setup required)
+### 🪟 Method 1 — Windows Desktop GUI (Recommended)
 
-> No cloning needed — pull and run directly from the registry.
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/ducduyhsme/gemini-web-to-api.git
+   cd gemini-web-to-api
+   ```
+2. Double-click **`start.bat`**.
+3. The Desktop GUI opens immediately:
+   - **No terminal windows pop up** (all processes run hidden in the background).
+   - Manage Google accounts, Antigravity models, and real-time logs from one clean interface.
 
-**Step 1 — Get your cookies**
+---
 
-> [!WARNING]
-> Keep these values secure and **never share or commit them** — they provide direct access to your Google account.
-
-1. Go to [gemini.google.com](https://gemini.google.com) and sign in
-2. Press `F12` → **Network**, reload Gemini, and select a
-   `batchexecute?rpcids=otAQ7b` request
-3. Copy its complete `Cookie` request header. If the request URL contains an
-   account slot such as `/u/2/`, also use `GEMINI_AUTH_USER="2"` below.
-
-**Step 2 — Run**
+### 🐳 Method 2 — Docker Run (Standalone Engine)
 
 ```bash
 docker run -d -p 4981:4981 \
   -e GEMINI_COOKIES="your_complete_cookie_header" \
-  -e GEMINI_AUTH_USER="2" \
   -e GEMINI_REFRESH_INTERVAL=1440 \
   -e GEMINI_MAX_RETRIES=3 \
   -e GEMINI_TEMPORARY=false \
   -e APP_ENV=production \
-  -e RATE_LIMIT_ENABLED=true \
-  -e RATE_LIMIT_WINDOW_MS=60000 \
-  -e RATE_LIMIT_MAX_REQUESTS=10 \
   -v ./cookies:/home/appuser/.cookies \
-  --tmpfs /tmp:rw,size=512m \
-  --tmpfs /home/appuser/.cache:rw,size=256m \
   --name gemini-web-to-api \
   --restart unless-stopped \
   ghcr.io/ntthanh2603/gemini-web-to-api:latest
 ```
 
-**Done!** Jump to [Test it](#-test-it). 🎉
-
 ---
 
-### 🛠️ Option B — Build from source
-
-> Use this if you want to build for a specific architecture (amd64, arm64, etc.) or modify the source code.
-
-**Step 1 — Clone the repository**
+### 🐹 Method 3 — Build from Source (Go + Node.js)
 
 ```bash
-git clone https://github.com/ntthanh2603/gemini-web-to-api.git
-cd gemini-web-to-api
+# 1. Build the Go engine binary
+go build -o gemini-web-to-api.exe ./cmd/server
+
+# 2. Launch the GUI management server
+node gui/server.js
+# Access the web interface at http://127.0.0.1:49000
 ```
-
-**Step 2 — Get your cookies and configure `.env`**
-
-> [!WARNING]
-> Keep these values secure and **never commit your `.env` file** — it contains credentials that provide access to your Google account.
-
-1. Go to [gemini.google.com](https://gemini.google.com) and sign in
-2. Press `F12` → **Network**, reload Gemini, and select a
-   `batchexecute?rpcids=otAQ7b` request
-3. Copy its complete `Cookie` request header into `GEMINI_COOKIES`.
-4. Match `GEMINI_AUTH_USER` to the request URL. For example, use `2` when the
-   URL contains `/u/2/`; leave it empty when there is no `/u/<number>/`.
-   Always take the cookie and account slot from the same browser tab.
-5. Create your `.env` from the example:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-6. Paste the values into `.env`:
-
-   ```env
-   GEMINI_COOKIES=your_complete_cookie_header
-   GEMINI_AUTH_USER=2
-   GEMINI_REFRESH_INTERVAL=1440
-   GEMINI_MAX_RETRIES=3
-   GEMINI_TEMPORARY=false
-   APP_ENV=production
-   RATE_LIMIT_ENABLED=true
-   RATE_LIMIT_WINDOW_MS=60000
-   RATE_LIMIT_MAX_REQUESTS=10
-   ```
-
-**Step 3 — Run**
-
-Pick whichever method suits your setup:
-
-| Method             | Command                        | Requirements                                                                                |
-| ------------------ | ------------------------------ | ------------------------------------------------------------------------------------------- |
-| 🐳 Docker Compose  | `docker compose up -d --build` | Docker                                                                                      |
-| 🐹 Go direct       | `go run cmd/server/main.go`    | [Go 1.21+](https://golang.org/dl/)                                                          |
-| ⚡ Task (dev mode) | `task dev`                     | [Task](https://taskfile.dev) + [Air](https://github.com/air-verse/air) (`task install-air`) |
-
-> `task dev` runs the server with **hot reload**: Air rebuilds and restarts it whenever a `.go`, `.json` or `.env` file changes (config in `.air.toml`).
-
-**Done!** Jump to [Test it](#-test-it). 🎉
 
 ---
 
-### ✅ Test it
+## 🖥️ Desktop GUI Breakdown
 
-```bash
-curl -X POST http://localhost:4981/openai/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model": "gemini-auto", "messages": [{"role": "user", "content": "Hello!"}]}'
-```
+The GUI is designed with a modern dark theme and divided into 4 dedicated tabs:
 
-Your Gemini Web To API is running at `http://localhost:4981` 🎉
-
----
-
-## ✨ Features
-
-- 🌉 **Universal AI Bridge**: One server, three protocols (OpenAI, Claude, Gemini)
-- 🔌 **Drop-in Replacement**: Works with existing OpenAI / Claude / Gemini SDKs
-- 🔄 **Smart Session Management**: Auto-rotates cookies to keep sessions alive
-- ⚡ **High Performance**: Built with Go and Fiber for speed
-- 🐳 **Production Ready**: Docker Compose support, Scalar UI, health checks
-- 📝 **Well Documented**: Interactive API docs at `/docs`
-- 🖼️ **Image Generation**: OpenAI-compatible text-to-image with authenticated `b64_json` output
-- 🧩 **Image Inputs**: Remote URLs, `data:` URLs and multiple reference images in chat requests
-- 🎬 **Video Generation**: Text-to-video (16:9 or 9:16 MP4) via Gemini Web's Videos tool, usable from the OpenAI (`client.videos`) and Google GenAI (`generate_videos`) SDKs
-- 🧾 **Canvas**: Gemini Canvas code files and documents via any chat API — just use a `-canvas` model (e.g. `gemini-auto-canvas`)
-- 🎵 **Music Generation**: Gemini Web's music tool through `client.audio.speech` (OpenAI) and `-music` models (Gemini)
-- 🔢 **Token usage estimates**: Chat endpoints report plausible `usage` counts, streaming included, even though Gemini Web usually sends none — see [Token usage reporting](#token-usage-reporting)
-- 🧹 **Clean Output**: Web-UI citation artifacts (`[cite: N]`, `[cite: N, M]`, `[cite_start]` and `?code_reference` / `?code_stdout` code-fence suffixes) are stripped from response text on every endpoint
-- 🧱 **JSON Responses**: OpenAI `response_format` (`json_object` / `json_schema`) is asked for in the prompt, fenced or prose-wrapped replies are cleaned, and one repair attempt is made before falling back to the raw text
-
-See [Image generation and image inputs](docs/image-generation.md) for tested examples, limitations and security guidance.
-See [Video generation](docs/video-generation.md) for the video APIs and the [OpenAI](examples/openai_video_client.py) / [Gemini](examples/gemini_video_client.py) SDK examples.
-See [Canvas](docs/canvas.md) and the [OpenAI](examples/openai_canvas_client.py) / [Gemini](examples/gemini_canvas_client.py) / [Claude](examples/claude_canvas_client.py) SDK examples for canvas mode.
-See [Music generation](docs/music.md) and the [OpenAI](examples/openai_music_client.py) / [Gemini](examples/gemini_music_client.py) SDK examples.
-
-### Token usage reporting
-
-Gemini Web's wire format usually carries no token counts, so the chat endpoints
-report **estimates**: `usage` on OpenAI and Claude, `usageMetadata` on Gemini.
-They come from a rune-based, per-script heuristic and are meant for context
-tracking and relative load monitoring — they are **not billing-grade**. Output
-counts include reasoning text. When a response does carry `usageMetadata`, its
-counts are used instead, and any count it leaves out falls back to the estimate.
-
-- **OpenAI**: streams end with a usage chunk when the request sets `stream_options: {"include_usage": true}`.
-- **Claude**: streams carry usage in `message_start` and `message_delta`; `/messages/count_tokens` uses the same estimate as `usage.input_tokens`.
-- **Gemini**: the last `streamGenerateContent` chunk carries `usageMetadata`.
-
-Image, video and music generation report no token counts.
+| Tab | Features |
+| :--- | :--- |
+| **Dashboard** | Live system health cards, 1-click Antigravity IDE connection toggle, 1-click Bridge server start/stop, and quick account action buttons. |
+| **Google Accounts** | Add and manage Google accounts. Each account runs on its own dedicated port (4981, 4982...) with independent cookie caching and real-time status indicators. |
+| **Antigravity Custom Provider & Models** | Add external providers (OpenAI-compatible or Claude), save reusable Model IDs, perform live API latency tests, and inject custom models into Antigravity IDE. |
+| **Unified Real-time Logs** | Live stream of all stdout and stderr logs from the Bridge proxy, Google account instances, and background processes via Server-Sent Events (SSE). |
 
 ---
 
-## 🛠️ Configuration
+## 🪐 Using External AI Providers with Antigravity
 
-### Environment Variables
+Google Antigravity is a powerful AI coding harness, but it only offers Google Gemini models by default. This suite bridges Antigravity with any external AI provider:
 
-| Variable                  | Required | Default | Description                                                      |
-| ------------------------- | -------- | ------- | ---------------------------------------------------------------- |
-| `GEMINI_COOKIES`          | ✅ Yes   | —       | Complete Cookie request header copied from the Gemini Web tab    |
-| `GEMINI_AUTH_USER`        | ❌ No    | —       | Google account slot from the Gemini URL, e.g. `2` for `/u/2/app` |
-| `GEMINI_REFRESH_INTERVAL` | ❌ No    | `1440`  | Cookie rotation interval in minutes (minimum `10`), see below    |
-| `GEMINI_MAX_RETRIES`      | ❌ No    | `3`     | Max retry attempts when an API call fails                        |
-| `GEMINI_TEMPORARY`        | ❌ No    | `false` | Enable stateless/incognito mode for all requests                 |
-| `GEMINI_VIDEO_TIMEOUT_MINUTES` | ❌ No | `10` | Minutes a video job may take (maximum `60`); only one video job runs at a time |
-| `GEMINI_COOKIE_API_KEY`   | ❌ No    | —       | Bearer token that enables `POST /admin/cookies`, see below       |
-| `PORT`                    | ❌ No    | `4981`  | Server port                                                      |
-| `RATE_LIMIT_ENABLED`      | ❌ No    | `false` | Enable or disable rate limiting                                  |
-| `RATE_LIMIT_WINDOW_MS`    | ❌ No    | `60000` | Rate limit time window in milliseconds                           |
-| `RATE_LIMIT_MAX_REQUESTS` | ❌ No    | `10`    | Maximum number of requests allowed per time window               |
+1. In the Desktop GUI, navigate to the **Antigravity Provider & Models** tab.
+2. Click **+ Add Custom Model**:
+   - **Protocol**: Select `OpenAI-Compatible` or `Claude`.
+   - **Base URL**: e.g., `https://api.deepseek.com/v1`, `https://openrouter.ai/api/v1`, `http://localhost:11434/v1` (Ollama), or local Gemini Web-to-API instance (`http://127.0.0.1:4982/openai/v1/chat/completions`).
+   - **API Key**: Enter your external provider's API key.
+   - **Model ID**: Enter your model ID (e.g. `deepseek-chat`, `claude-3-7-sonnet-20250219`, `gpt-4o`). The ID is automatically saved to your history for quick 1-click reuse.
+3. Click **Test Connection** to verify latency and connectivity.
+4. Click **Connect Antigravity IDE** (or toggle on the Dashboard).
+5. Reload or open Antigravity IDE: your custom model appears right in the chat model selection menu!
 
-### Avoiding Gemini blocks (`GEMINI_REFRESH_INTERVAL`)
+### Configuration Presets
 
-The server periodically rotates the `__Secure-1PSIDTS` cookie and refreshes the
-Gemini session token to keep it alive. Doing this too often looks automated, and
-Google may answer with `429`, "unusual traffic" pages or force you to sign in again.
-
-- The default is **1440 minutes (24h)**. Values below **10** are raised to 10; `0` or
-  negative values fall back to the default.
-- If you still get blocked, keep the default (or go higher) and also keep
-  `RATE_LIMIT_ENABLED=true` with a modest `RATE_LIMIT_MAX_REQUESTS`.
-- If the session starts expiring between rotations (logs show
-  `marking client unhealthy`), lower it again or copy a fresh cookie header.
-
-### Updating cookies from a browser extension (`GEMINI_COOKIE_API_KEY`)
-
-Set `GEMINI_COOKIE_API_KEY` to a long random value to let a browser extension
-push a fresh session instead of restarting the container. When the variable is
-unset the routes are not registered at all (they answer `404`), so existing
-deployments are unaffected.
-
-```bash
-curl -X POST http://localhost:4981/admin/cookies \
-  -H "Authorization: Bearer $GEMINI_COOKIE_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"cookies": "SID=...; __Secure-1PSID=...; __Secure-1PSIDTS=..."}'
-```
-
-- `cookies` must be the complete Cookie request header, exactly like
-  `GEMINI_COOKIES`, and must contain both `__Secure-1PSID` and
-  `__Secure-1PSIDTS`.
-- The pushed session is verified against Google before it replaces the live one;
-  a bad header returns `4xx` and leaves the current session untouched. The
-  token is compared in constant time.
-- Pushing the `__Secure-1PSIDTS` of a healthy live session returns `200` with
-  `{"status":"noop"}` and does **not** contact Google, so extensions can push on
-  every cookie change. If the session is unhealthy, the push is verified again,
-  so re-pushing can recover it.
-- The pushed header replaces `GEMINI_COOKIES` for later session refreshes and is
-  saved to `.cookies/pushed-session.json`, so it survives a restart. Editing
-  `GEMINI_COOKIES` afterwards makes the server use the edited value instead.
-- `GET /admin/cookies` (same bearer token) reports a short SHA-256 fingerprint
-  of `__Secure-1PSID`, the cache age, the last update time and the update
-  source. It never returns cookie values.
-
-### Configuration Priority
-
-1. **Environment Variables** (highest priority)
-2. **`.env` file**
-3. **Defaults** (lowest priority)
+| Provider | Protocol | Base URL | Sample Model ID |
+| :--- | :---: | :--- | :--- |
+| **Anthropic Claude** | `Claude` | `https://api.anthropic.com/v1` | `claude-3-7-sonnet-20250219`<br>`claude-3-5-sonnet-20241022` |
+| **OpenAI Official** | `OpenAI` | `https://api.openai.com/v1` | `gpt-4o`<br>`o3-mini` |
+| **DeepSeek** | `OpenAI` | `https://api.deepseek.com/v1` | `deepseek-chat`<br>`deepseek-reasoner` |
+| **OpenRouter** | `OpenAI` | `https://openrouter.ai/api/v1` | `anthropic/claude-3.7-sonnet`<br>`deepseek/deepseek-r1` |
+| **Ollama (Local)** | `OpenAI` | `http://localhost:11434/v1` | `qwen2.5-coder:32b`<br>`deepseek-r1:14b` |
+| **Groq Cloud** | `OpenAI` | `https://api.groq.com/openai/v1` | `llama-3.3-70b-versatile` |
 
 ---
 
-## 🧪 Usage Examples
+## 🧩 Chrome Extension (1-Click Cookie Sync)
 
-### Model selection
+Located in [`chrome-extension/`](chrome-extension/):
 
-The provider discovers selectable models and their internal IDs from the signed-in account's Gemini Web model registry during session initialization and refresh. List the current choices with:
+1. Open Chrome or Edge and go to `chrome://extensions`.
+2. Enable **Developer mode** (top-right toggle).
+3. Click **Load unpacked** and select the `chrome-extension/` directory.
+4. Open the extension popup, enter the target port (e.g., `4981`), and click **Sync Cookie Now**.
+5. The local instance hot-reloads the session instantly without restarting.
 
-```bash
-curl http://localhost:4981/openai/v1/models
-```
+---
 
-Use a returned model ID in your requests. IDs are derived from Gemini's current
-display labels, such as `gemini-3.6-flash` and `gemini-3.1-pro`; they are not a
-fixed allowlist. Every selectable registry entry is returned, so newly added
-Gemini models become available without a code update. Category names returned
-by Gemini remain aliases, and `gemini-advanced` is retained as a compatibility
-alias for the discovered Pro category. An unavailable or unknown name returns
-an error instead of silently selecting another model.
+## 🧪 API Usage Examples
 
-Many accounts now get Gemini Web's **Auto** picker. These accounts list only
-`gemini-auto`: there is no separate Pro, Flash or Thinking model to select,
-because Gemini chooses the model for each request and uses Pro only when the
-account is allowed it. Use `gemini-auto` for every endpoint (and
-`gemini-auto-canvas` / `gemini-auto-music` for Canvas and music). On the OpenAI
-API, set `reasoning_effort` to `low`, `medium` or `high` to choose the thinking
-level. `gemini-pro` and `gemini-advanced` return HTTP 400 on these accounts, and
-the error message says to use `gemini-auto`. The examples in this README use
-`gemini-auto`. If your account lists Pro, you can use `gemini-pro` instead.
-
-Model names are not seeded locally. When Google adds, removes, or renames a model, use the names returned by this endpoint instead of relying on old Gemini API version names.
-
-The `model` field in a completion response contains the resolved versioned
-model ID (for example, a `gemini-advanced` request currently returns
-`gemini-3.1-pro`). Generated self-introductions are ordinary model output and
-can still be inaccurate.
-
-Gemini Web may silently serve a lower-tier model after the selected model's
-quota is exhausted. The proxy detects an unambiguous different model ID in the
-protocol response and reports that model in `model`. The original caller value
-is preserved in `requested_model`. This keeps the response truthful without
-blocking a model that Gemini still advertises as selectable; after its quota
-resets, `model` returns to the requested version.
-
-### Thinking level (OpenAI-compatible chat)
-
-Set `reasoning_effort` to `low`, `medium`, or `high` in
-`POST /openai/v1/chat/completions`, including streaming requests:
-
-```json
-{
-  "model": "gemini-3.6-flash",
-  "reasoning_effort": "medium",
-  "messages": [{"role": "user", "content": "Explain your answer."}]
-}
-```
-
-Omitting this field preserves the existing low setting. The other OpenAI
-values are clamped to the nearest Gemini level (`none` and `minimal` → `low`,
-`xhigh` → `high`); anything else returns HTTP 400. The mapping is based on Gemini 3.6 Flash browser captures;
-availability of thinking levels on other models depends on Gemini Web.
-
-When Gemini thinks, the reasoning it reports is Google's thought **summary** —
-the same status lines the Gemini web UI shows in its Thinking block (for
-example, "Analyzing travel's impact on finances"). They are surfaced as
-OpenAI's `reasoning_content`, Claude's `thinking` block, and Gemini's
-`thought: true` part. Consecutive repeated lines are collapsed, and the lines
-are newline-separated. This is not the model's full chain of thought: Gemini
-Web does not send a verbatim trace over the wire, so no proxy can expose one.
-An older inline `<ctrl94>`/`<ctrl95>` trace format is still parsed as a
-fallback if it reappears.
-
-### JSON responses (`response_format`, OpenAI-compatible chat)
-
-`POST /openai/v1/chat/completions` accepts OpenAI's `response_format`, for both
-streaming and non-streaming requests:
-
-```json
-{
-  "model": "gemini-3.6-flash",
-  "messages": [{"role": "user", "content": "Invent a person."}],
-  "response_format": {
-    "type": "json_schema",
-    "json_schema": {
-      "name": "person",
-      "schema": {
-        "type": "object",
-        "properties": {"name": {"type": "string"}, "age": {"type": "integer"}},
-        "required": ["name", "age"]
-      }
-    }
-  }
-}
-```
-
-Gemini Web has no JSON mode, so this is best-effort:
-
-- The prompt asks for JSON only, with no code fences and no text around it.
-- A `json` markdown code fence and any prose around the JSON are stripped before
-  the reply is checked: `json_object` needs valid JSON that parses to an object,
-  `json_schema` also needs the requested top-level type and every required key
-  (deeper schema checks are not enforced). A reply that is broken as a whole is
-  never answered with one of the objects nested inside it.
-- A reply that does not match is sent back to Gemini **once** for a repair. That
-  is a second request on your Google account, so it never loops, with or without
-  tools: if the repair is still invalid, the raw reply is returned and a warning
-  is logged.
-- `{"type": "text"}` (the default) and unknown types are ignored. With tools, a
-  reply without a tool call carries its JSON in the bridge's `content`; when the
-  model calls a tool, the tool call is returned unchanged and JSON mode is
-  skipped, so a tool call is never re-asked for JSON.
-
-### OpenAI SDK (Python)
+### 1. OpenAI SDK (Python)
 
 ```python
 from openai import OpenAI
@@ -405,7 +192,7 @@ response = client.chat.completions.create(
 print(response.choices[0].message.content)
 ```
 
-### Claude SDK (Python)
+### 2. Claude SDK (Python)
 
 ```python
 from langchain_anthropic import ChatAnthropic
@@ -416,11 +203,11 @@ llm = ChatAnthropic(
     api_key="not-needed"
 )
 
-response = llm.invoke("Explain quantum computing")
+response = llm.invoke("Explain quantum computing in simple terms.")
 print(response.content)
 ```
 
-### Gemini Native SDK (Python)
+### 3. Google GenAI Native SDK (Python)
 
 ```python
 from google import genai
@@ -435,16 +222,12 @@ client = genai.Client(
 
 response = client.models.generate_content(
     model="gemini-auto",
-    contents="Write a poem about coding",
+    contents="Write a poem about open source software.",
 )
 print(response.text)
 ```
 
-Install the maintained SDK with `pip install google-genai`. Both regular
-generation and `generate_content_stream` are supported; the latter uses the
-SDK's `alt=sse` transport.
-
-### cURL
+### 4. cURL
 
 ```bash
 curl -X POST http://localhost:4981/openai/v1/chat/completions \
@@ -456,54 +239,47 @@ curl -X POST http://localhost:4981/openai/v1/chat/completions \
   }'
 ```
 
-More examples are available in the [`examples/`](examples/) directory.
+---
+
+## 🛠️ Configuration & Environment Variables
+
+| Variable | Required | Default | Description |
+| :--- | :---: | :---: | :--- |
+| `GEMINI_COOKIES` | ✅ Yes | — | Complete Cookie request header copied from Gemini Web |
+| `GEMINI_AUTH_USER` | ❌ No | — | Account slot from Gemini URL, e.g. `1` for `/u/1/app` |
+| `GEMINI_REFRESH_INTERVAL` | ❌ No | `1440` | Cookie rotation interval in minutes (min `10`) |
+| `GEMINI_MAX_RETRIES` | ❌ No | `3` | Max retry attempts upon upstream API failures |
+| `GEMINI_TEMPORARY` | ❌ No | `false` | Enable stateless/incognito mode for all requests |
+| `GEMINI_COOKIE_API_KEY` | ❌ No | `gemini-cookie-sync` | Bearer token for `POST /admin/cookies` hot sync |
+| `PORT` | ❌ No | `4981` | Server listening port |
+| `RATE_LIMIT_ENABLED` | ❌ No | `false` | Enable or disable rate limiting |
 
 ---
 
-## 📘 API Documentation
+## 🔒 Security & Privacy
 
-Once running, visit **`http://localhost:4981/docs`** for interactive API documentation powered by [Scalar](https://scalar.com).
+- **Zero Credential Leaks**: `.gitignore` is strictly pre-configured to ignore all `.env` files, `accounts/*.env`, `accounts/accounts.json`, `instances/`, `.cookies/`, and log files. Your Google credentials and API keys will never be accidentally committed to git.
+- **Local Isolation**: All Bridge proxies and GUI services bind strictly to `127.0.0.1` by default, preventing unintended network exposure.
+
+---
+
+## 📘 Interactive API Documentation
+
+Visit **`http://localhost:4981/docs`** while the engine is running for interactive OpenAPI documentation powered by [Scalar](https://scalar.com).
 
 ![Scalar UI](assets/swagger.png)
 
 ---
 
-## 🤝 Contributing
+## 🙏 Credits & Acknowledgments
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+This project is built upon the excellent foundation created by the open-source community:
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 👤 Author
-
-- **Nguyễn Tuấn Thành** ([@ntthanh2603](https://github.com/ntthanh2603))
+- **Original Engine Foundation**: Created by **[Nguyễn Tuấn Thành (@ntthanh2603)](https://github.com/ntthanh2603)** — [gemini-web-to-api](https://github.com/ntthanh2603/gemini-web-to-api). We express our sincere appreciation for the foundational reverse-engineering work and Go server architecture.
+- **Desktop GUI & Antigravity Suite Enhancements**: Developed and maintained by **[Tạ Đức Duy (@ducduyhsme)](https://github.com/ducduyhsme)**.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
-
-## ⭐ Star History
-
-If you find this project useful, please consider giving it a star! ⭐
-
----
-
-## 🔗 Links
-
-- **GitHub**: [ntthanh2603/gemini-web-to-api](https://github.com/ntthanh2603/gemini-web-to-api)
-- **Gemini Web**: [gemini.google.com](https://gemini.google.com)
-- **Issues**: [Report a bug](https://github.com/ntthanh2603/gemini-web-to-api/issues)
-
----
-
-**Created with ❤️ by [@ntthanh2603](https://github.com/ntthanh2603)**
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.

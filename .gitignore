@@ -1,60 +1,68 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
+# ==============================================================================
+# Git Ignore Configuration for gemini-web-to-api & Antigravity Suite
+# ==============================================================================
+
+# Binaries and compiled executables
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
+gemini-web-to-api
+gemini-web-to-api.exe
 
-# Test binary, built with `go test -c`
+# Go test binaries and coverage profiles
 *.test
-
-# Code coverage profiles and other test artifacts
 *.out
 coverage.*
 *.coverprofile
 profile.cov
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Go workspace file
 go.work
 go.work.sum
 guide.md
 
-# config file
+# User Account Data & Sensitive Credentials (NEVER COMMIT)
+.cookies/
+.env
+*.env
+.env.*
+!.env.example
+accounts/*.env
+accounts/accounts.json
+instances/
+
+# Runtime Logs, PIDs, and Temporary Caches
+*.log
+*.pid
+tmp/
+tempProfile/
+gemini_api_gui_profile/
+antigravity-bridge/*.log
+antigravity-bridge/*.pid
+
+# Dependencies
+node_modules/
+# vendor/
+
+# Configuration overrides
 config.yml
 
-# cookies
-.cookies/
-
-# env file
-.env
-
-# logs
-*.log
-
-# server
-./server
-
-# compiled binary
-gemini-web-to-api
-gemini-web-to-api.exe
-
-# Editor/IDE
+# IDE & Editor files
 .idea/
 .vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
 
+# OS-specific files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
 
-# pycache
+# Python cache and generated test outputs
 examples/__pycache__/
-# air hot reload
-tmp/
-
-# generated example outputs
 examples/generated_video*.mp4
 examples/generated_canvas_*
 examples/generated_music_*
