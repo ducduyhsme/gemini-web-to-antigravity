@@ -276,7 +276,7 @@ Visit **`http://localhost:4981/docs`** while the engine is running for interacti
 This project is built upon the excellent foundation created by the open-source community:
 
 - **Original Engine Foundation**: Created by **[Nguyễn Tuấn Thành (@ntthanh2603)](https://github.com/ntthanh2603)** — [gemini-web-to-api](https://github.com/ntthanh2603/gemini-web-to-api). We express our sincere appreciation for the foundational reverse-engineering work and Go server architecture.
-- **Desktop GUI & Antigravity Suite Enhancements**: Developed and maintained by **[Tạ Đức Duy (@ducduyhsme)](https://github.com/ducduyhsme)**.
+- **Desktop GUI & Antigravity Suite Enhancements**: Developed and maintained by **[@ducduyhsme](https://github.com/ducduyhsme)**.
 
 ---
 
